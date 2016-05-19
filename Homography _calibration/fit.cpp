@@ -13,7 +13,7 @@
 //# define Uniform_selection
 //# define New_version_Test
 # define Old_version 
-# define maxima_trial  700
+# define maxima_trial  200
 //#define debug1
 //# define initialized(a) Edge Edges[a]; 
 //using namespace std;
@@ -172,7 +172,7 @@ void fit(std::vector<std::vector<CvPoint> >&edgelist, int ImgWidth, int ImgHeigh
             int c1,c2;
             double d;
             double d1;
-            for (int i=0;i<500;i++)
+            for (int i=0;i<100;i++)
             {
                 d =  getClosestClusters_N(NvCluster, c1, c2);
                 d1=  CalculateClusterJaccardDist_N(c1 , c2, NvCluster);
@@ -632,7 +632,7 @@ bool Gen_Hyp(int &i, int &j, double *VP)
     ErrorDeviation=error_deviation1; 
 #endif  
 #ifdef Old_version
-    ErrorDeviation=0.005; 
+    ErrorDeviation=0.01; 
 #endif
     if (fabs(error[0])>ErrorDeviation)
     {

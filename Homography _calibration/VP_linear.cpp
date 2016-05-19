@@ -9,7 +9,7 @@
 #include "Jlinkage.h"
 #include <cstdio>
 
-# define MAXIMUM_ERROR 0.05
+# define MAXIMUM_ERROR 0.08
 std::vector<pt3> _3D_VP_result;   //Global_variable : result of vanishing_points
 
 void linear_estimation(multimap<string, int> &m)
@@ -105,7 +105,7 @@ for(int cluster_k=0;cluster_k<Num_cluster;cluster_k++)
 //             VP_result->p3=-VP_result->p3;
 //         }
         
-         cout<<"VP_result_3D "<<VP_result->p1<<" "<<VP_result->p2<<" "<<VP_result->p3<<endl;
+         //cout<<"VP_result_3D "<<VP_result->p1<<" "<<VP_result->p2<<" "<<VP_result->p3<<endl;
          //cout<<"Vp_result_2D  "<<(VP_result->p1/VP_result->p3)<<" "<<(VP_result->p2/VP_result->p3)<<endl;
          // temprary save pt3 for transferring data 
 
@@ -122,7 +122,7 @@ for(int cluster_k=0;cluster_k<Num_cluster;cluster_k++)
              temp.p1=VP_result->p1;temp.p2=VP_result->p2;temp.p3= VP_result->p3;
             
              _3D_VP_result.push_back(temp);
-             cout<<"color_R"<<endl;
+             //cout<<"color_R"<<endl;
            }
         }
         if((VP_result->p1/VP_result->p3)<0 )    // color G
@@ -136,7 +136,7 @@ for(int cluster_k=0;cluster_k<Num_cluster;cluster_k++)
              temp.p1=VP_result->p1;temp.p2=VP_result->p2;temp.p3= VP_result->p3;
             
              _3D_VP_result.push_back(temp);
-             cout<<"color_G"<<endl;   
+             //cout<<"color_G"<<endl;   
             }
         }
         //if((fabs(VP_result->p2/VP_result->p1))>4)  // color B
@@ -151,7 +151,7 @@ for(int cluster_k=0;cluster_k<Num_cluster;cluster_k++)
              temp.p1=VP_result->p1;temp.p2=VP_result->p2;temp.p3= VP_result->p3;
              
              _3D_VP_result.push_back(temp);
-             cout<<"color_B"<<endl;
+             //cout<<"color_B"<<endl;
                 }
         //}  
     }  

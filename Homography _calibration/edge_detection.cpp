@@ -79,7 +79,7 @@ vector<vector<CvPoint> > edge_detection(IplImage* Iplimage)
     seg=line_segmentation(vComp, tor);
     for(int i=0;i<seg.size();i++)
     {
-        if (seg[i].size()>segmentation)
+        if (seg[i].size()>300)
             //    if (seg[i].size()>50)
         {
             seg_result.push_back(seg[i]);
@@ -413,8 +413,8 @@ std::vector< std::vector <CvPoint> >edge_detection_test(IplImage* Iplimage, IplI
     seg=line_segmentation(vComp, tor);
     for(int i=0;i<seg.size();i++)
     {
-        //if (seg[i].size()>segmentation)
-                if (seg[i].size()>80)
+        if (seg[i].size()>segmentation)
+        //        if (seg[i].size()>130)
         {
             seg_result.push_back(seg[i]);
         }

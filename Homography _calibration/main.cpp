@@ -18,6 +18,8 @@
 #include <iomanip>
 #include <math.h>
 #include "SOIL.h"
+#include <ctime>
+
 
 #define CAMERA_OUTPUT_WINDOW_NAME "camera-output"
 #define IMAGE_WIDTH  400
@@ -156,7 +158,7 @@ int main (int argc, char * argv[])
 //    return 0;
 #endif  
 #ifdef Ues_simulated_frame   
-     capture = cvCaptureFromFile("/test_w_4.mov");
+     capture = cvCaptureFromFile("/test_w_5.mov");
      frame = NULL;
 
     if (typp_test::read()==2)   // frame_based
@@ -216,7 +218,6 @@ int main (int argc, char * argv[])
      */
 
     if (typp_test::read()==1)  // set to Add_opengl
-
     {
       # define vector_erase 
       //IplImage* IGray;
@@ -273,8 +274,13 @@ int main (int argc, char * argv[])
         cvCvtColor(img,  IGray, CV_RGB2GRAY);   
         vector<vector<CvPoint> > edgelist;
         edgelist=edge_detection_test(IGray, Edge_map);
+        int start_s=clock();
+        // the code you wish to time goes here
+        
         fit(edgelist,ImgWidth,ImgHeight);
         Jlinkage(); 
+        int stop_s=clock();
+        cout << "time: " << (stop_s-start_s)/double(CLOCKS_PER_SEC)*1000 << endl;
         //linear_estimation();
         //int size1_=(int) cluster_result.size();
         //Draw_Result_Imagebased(img, size1_, edgelist);
@@ -309,6 +315,5 @@ void Draw_Result_Imagebased(IplImage *img, int& size1_ , vector<vector <CvPoint>
                start_pt.y = edgelist[index][0].y;
                  cvLine(img,start_pt,end_pt,CV_RGB(0,255,0),1,CV_AA);
              }
-
     }
 }
