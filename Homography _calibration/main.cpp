@@ -275,19 +275,11 @@ int main (int argc, char * argv[])
         vector<vector<CvPoint> > edgelist;
         edgelist=edge_detection_test(IGray, Edge_map);
         int start_s=clock();
-        // the code you wish to time goes here
-        
         fit(edgelist,ImgWidth,ImgHeight);
         Jlinkage(); 
         int stop_s=clock();
         cout << "time: " << (stop_s-start_s)/double(CLOCKS_PER_SEC)*1000 << endl;
-        //linear_estimation();
-        //int size1_=(int) cluster_result.size();
-        //Draw_Result_Imagebased(img, size1_, edgelist);
-        //cvShowImage("example", img); 
-        //cvWaitKey(0);
-        //cvReleaseImage(&img);
-        //cvReleaseImage(&IGray);
+       
     }
     #endif
     return 0;   
