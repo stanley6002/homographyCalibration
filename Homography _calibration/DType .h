@@ -20,15 +20,16 @@ extern "C"
  # define BLACK 0
  # define WHITE 255
  # define line_threshold   3.5
- # define minLength        80
+ # define minLength        50
  # define tolerance        5.0     //  line tolerance
- # define segmentation     100
+ # define segmentation     50
  # define maxima_trial     200     // number of hypothesis
  # define error_deviation  0.0001
  # define error_deviation1 0.0001
- # define Focallength      500
+ # define Focallength      440
  # define maxima_iteration 200   // number of iteration for fining the j-linkage
-    
+ # define scaled_width 640
+ # define scaled_height 480  
   // # define deviation 2.0;
     typedef struct  xypoint
     {

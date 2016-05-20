@@ -48,8 +48,9 @@ void current_utc_time(struct timespec *ts) {
 void idle()
 {
      //capture next frame from next capture frame
-   
-     frame = cvQueryFrame(capture);  
+     // use skipFrame for image resize;
+     frame = scaleFrame(capture,0);
+    
 }
 void idle1()
 {
@@ -58,44 +59,13 @@ void idle1()
     frame = cvQueryFrame(camCapture);  
 //frame = skipNFrames(camCapture, 1);
 }
-void keyboard( unsigned char key, int x, int y )
-{
-    switch ( key )
-    {
-        case 'q':
-            // quit when q is pressed
-            exit(0);
-            break;
-            
-        default:
-            break;
-    }
-}
-void mouse( int button, int state, int x, int y )
-{
-    if ( button == GLUT_LEFT_BUTTON && state == GLUT_UP )
-    {
-        
-    }
-}
+
 void display()
 {
     glClear( GL_COLOR_BUFFER_BIT );
     
-    clock_t start, end;
-    double elapsed;
-    start = clock();
-       
     Jlinkage_app();
-     
-    end = clock();
-    elapsed = ((double) (end - start)) / CLOCKS_PER_SEC;
-    std::cout<<"time : "<<elapsed;
-    
-    // clear the window
-    
-    //cvWaitKey(1);
-    
+         
     cv::Mat out;
     cv::Mat tempimage(frame);
     cv::flip (tempimage,out,0);
@@ -271,17 +241,16 @@ void reshape( int w, int h )
     // set OpenGL viewport (drawable area)
     glViewport( 0, 0, w, h );
 }
-IplImage* skipNFrames(CvCapture* capture, int n)
+IplImage* scaleFrame(CvCapture* capture, int n)
 {
-    for(int i = 0; i < n; ++i)
-    {
-        if(cvQueryFrame(capture) == NULL)
-        {
-            return NULL;
-        }
-    }
+
+    IplImage* temp;
+    temp = cvQueryFrame(capture);
     
-    return cvQueryFrame(capture);
+    IplImage* tempframe = cvCreateImage ( cvSize(scaled_width,scaled_height), temp->depth, 3);
+    cvResize(temp, tempframe);
+
+    return tempframe;
 }
 void display1()
 {
@@ -332,13 +301,11 @@ void display1()
     
     //move to the position where you want the 3D object to go
     glTranslatef(0, 0, 0); 
+    
     //this is an arbitrary position for demonstration
     //you will need to adjust your transformations to match the positions where
     //you want to draw your objects(i.e. chessboard center, chessboard corners)
     glColor3f(1.0,1.0,1.0);
-    //glutSolidTeapot(0.3);
-    //glutSolidSphere(.3, 100, 100);
-    //drawAxes(1.0);
     DrawCone ();
     glPopMatrix();
     
@@ -355,16 +322,35 @@ void Jlinkage_app()
     IplImage* IGray;
     IplImage* Edge_map;
     CvPoint start_pt, end_pt;
+    
+    clock_t start, end;
+    double elapsed;
+    start = clock();
+
     vector<vector<CvPoint> > Line_Segmentation;          
     IGray  = cvCreateImage(cvGetSize(frame), IPL_DEPTH_8U, 1);
     Edge_map  = cvCreateImage(cvGetSize(frame), IPL_DEPTH_8U, 1);
     cvCvtColor(frame,  IGray, CV_RGB2GRAY); 
     Line_Segmentation= edge_detection_test(IGray,Edge_map);
+
+    end = clock();
+    elapsed = ((double) (end - start)) / CLOCKS_PER_SEC;
+    
+    std::cout<<"time edge  and line segmentation: "<<elapsed <<endl;
+    
+    //clock_t start, end;
+    //double elapsed;
+    start = clock();
     
     fit(Line_Segmentation, Img_width,Img_height);
     Edg.~Edge2();
     
     Jlinkage();   
+    
+    end = clock();
+    elapsed = ((double) (end - start)) / CLOCKS_PER_SEC;
+    std::cout<<"time j-linkage: "<<elapsed;
+    
     IplImage* Img_plot;
     Img_plot= cvCloneImage(frame);
     Plot_frame_lines(Img_plot, Line_Segmentation);
@@ -372,8 +358,7 @@ void Jlinkage_app()
     erase_2Dvector();
     
     vector<vector<bool> >().swap(errorlst); 
-    
-    //cvWaitKey(60);
+
     cvReleaseImage(&Img_plot);
     cvReleaseImage(&IGray);
     cvReleaseImage(&Edge_map);
@@ -440,6 +425,7 @@ void Plot_frame_lines(IplImage* Img_plot, vector< vector<CvPoint> >& Line_Segmen
 //          }
 //        }
 }
+
 void DrawCone ()
 {
     //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

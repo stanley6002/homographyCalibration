@@ -11,13 +11,10 @@
 #include "Jlinkage.h"
 #include "Operation_type.h"  // add Operation_type control
 
-
 //Edge2 Edg;
 //using namespace cluster_list;
 //const int _col = maxima_trial;
 //const int _row = (int)Edg.size();
-
-
 
 std::vector< Cluster > vCluster;
 vector<vector<int> > cluster_result; 
@@ -112,47 +109,22 @@ void Cluster_Initilization()
 {
     int _row  =(int)Edg.size();  // row= number of edges 
     int _col  = maxima_trial; 
-    
-    //    for(int i=0;i<_col;i++)
-    //    {
-    //        std::cout<<errorlst[0][i]<<endl;    // col= number trials
-    //     }
-    // Parameter_Initilization(_row);
-    //char buff[10];
-    //sprintf(buff, "%d", _col);
-    //char*ext =".txt";
-    //char filename[100]= "/matrix_print" ;
-    //strcat(filename,buff);
-    //strcat(filename,ext);
-    //FILE *f = fopen("/matrix_print.txt", "w");
-    //FILE *f = fopen(filename, "w");
-    //fprintf(f, "%s ","["); 
    
     for (int i=0;i<_row;i++)
     {
         Cluster c;
         c.disable = false;
         c.vData.push_back(i);                           //cluster contains only one point
-        //c.vDist = (double*) malloc(nPts*sizeof(double));
         c.vDist = new double[_row];
         c.pBin =  new bool[_col];
-        //memcpy(c.pBin, totbin+i*nMod, nMod*sizeof(bool) ); //copy point in model space
-             
-        //std::cout<<endl;    
+  
         for(int inx=0;inx<_col;inx++)
-        {
-             c.pBin[inx]=  errorlst[inx][i];
-            // fprintf(f, "%i ",(int) errorlst[inx][i]);
-            //std::cout<<errorlst[inx][i]<<" ";
-        }
-        // fprintf(f, "%s \n",";");        
-        //std::cout<<errorlst[0].size()<<endl;    
+            c.pBin[inx]=  errorlst[inx][i];
+           
         c.pLength = _col;
         vCluster.push_back(c);
     }
-  //   fprintf(f, "%s ","]"); 
-  //   fclose(f);
-    Distance_Initilization(_row);
+     Distance_Initilization(_row);
     ////    std::cout<<endl;
     ////    for (int i=0;i<_col;i++)
     ////    {
@@ -168,12 +140,12 @@ static void Compute_Initial_Distance()
     { 
         //minimal distance info to speed up computation
         double  minDist    = DBL_MAX;
-        int    minDistIdx =  INT_MAX;
+        int     minDistIdx =  INT_MAX;
         
         for (int j=i+1; j< (int)vCluster.size() ; j++)
         {
             double d = getClusterJaccardDist(vCluster[i], vCluster[j]);
-            //std::cout<<j<<endl;
+            
             vCluster[i].vDist[j] = d;
             
             if (d<minDist)
@@ -212,20 +184,12 @@ static double getClusterJaccardDist(Cluster c1, Cluster c2)
 }
 static double getClosestClusters(std::vector<Cluster> &vCluster, int &c1, int &c2)
 {
-    //#ifdef DEBUG
-    // MPRINTF("getting closest clusters (%d)...", vCluster.size() );
-    //int nbDisable =0;
-    //for (int i=0; i < vCluster.size(); i++)
-    //     if (vCluster[i].disable) nbDisable++;
-    // MPRINTF("nb disable= %d\n", nbDisable);
-    //#endif
     double minDist = DBL_MAX;
     
     
     for (int i=0; i < vCluster.size(); i++)
     {
         Cluster c = vCluster[i];
-        //cout<<i<<endl;
         if (c.disable) 
         {
             continue;
@@ -240,25 +204,10 @@ static double getClosestClusters(std::vector<Cluster> &vCluster, int &c1, int &c
         minDist = c.minDist;
         c1 = i;
         c2 = c.minDistIdx;
-        //std::cout<<c1<<" "<<c2<<" "<<endl;
-        //below is useless
-        // 	{
-        // 	  //MPRINTF("\t(%d) %lf\n", j, c.vDist[j]);
-        // 	  if (c.vDist[j] < minDist)
-        // 	    {
-        // 	      c1 = i;
-        // 	      c2 = j;
-        // 	      minDist = c.vDist[j];
-        // 	    }	  
-        // 	}
     }
     
     assert(c1<c2);
     
-    
-    //#ifdef DEBUG
-    //    printf("%d %d -> %lf\n", c1,c2, minDist);
-    //#endif
     return minDist;
     
 }
@@ -284,42 +233,15 @@ void intersectiontwoCluster (Cluster &c1, Cluster &c2)
 }
 void mergeClusters(std::vector<Cluster> &vCluster, int c1, int c2)
 {
-    //#ifdef DEBUG
-    //    MPRINTF("Merging %d %d\n", c1,c2);
-    //#endif
-    //    
-    //#ifdef DEBUG
-    //    assert(c1<c2);
-    //    
-    //    if(vCluster[c2].disable )
-    //        mexErrMsgIdAndTxt("stats:linkagemex:error",
-    //                          "already disable");
-    //    if(vCluster[c1].disable )
-    //        mexErrMsgIdAndTxt("stats:linkagemex:error",
-    //                          "Should not be disable");
-    //#endif
-    
-    //merging:
+ 
     //insert data of c2 into c1
     vCluster[c1].vData.insert(vCluster[c1].vData.end(), 
                               vCluster[c2].vData.begin(), 
                               vCluster[c2].vData.end()  );
     
-    // for(int i=0;i<(int)vCluster[c1].vData.size();i++)
-    // {
-    //     cout<< vCluster[c1].vData[i]<<endl;
-    // }
-    // cout<<endl;
-    
-    //erase c2's data and disable this cluster
     //we don't remove from vCluster for efficiency
     vCluster[c2].vData.clear();
     vCluster[c2].disable = true;
-    
-    //#ifdef DEBUG
-    //    MPRINTF("Cluster %d contains %d point\n", c1, 
-    //            vCluster[c1].vData.size() );
-    //#endif
     
     //Compute new value of c1
     intersectiontwoCluster( vCluster[c1],  vCluster[c2] );
@@ -391,7 +313,6 @@ void Cluster_Initilization_N(int NumberofCandidacy,int NumbeofTrial, vector<vect
     FILE *f = fopen(filename, "w");
     fprintf(f, "%s ","["); 
 
-    
     for (int i=0;i<_row;i++)
     {
         Cluster c;
@@ -405,10 +326,10 @@ void Cluster_Initilization_N(int NumberofCandidacy,int NumbeofTrial, vector<vect
         for(int inx=0;inx<_col;inx++)
         {
             c.pBin[inx]=  errorlst[inx][i];
-             //    fprintf(f, "%i ",(int) errorlst[inx][i]);
-            //cout<<errorlst[inx][i]<<" ";
+             //fprintf(f, "%i ",(int) errorlst[inx][i]);
+             //cout<<errorlst[inx][i]<<" ";
         }
-         // fprintf(f, "%s \n",";");        
+        // fprintf(f, "%s \n",";");        
         //cout<<endl;
         c.pLength = _col;
         NvCluster.push_back(c);
@@ -560,7 +481,6 @@ void mergeClusters_N(std::vector<Cluster> &NvCluster, int c1, int c2)
                 NvCluster[i].minDistIdx = j;
             }
         }
-        
     }
 }
 void erase_2Dvector()
@@ -674,7 +594,7 @@ void test_rot_initial()
                
                Restore_Rotation_Matrix(previous,current,R,(int) temp.size());
                //cout<<"Rotation_matrix"<<endl;
-                matrix_print(3, 3, R);
+               // matrix_print(3, 3, R);
                //matrix_transpose(3, 3, R, RT);
                
                for(int i=0;i<9;i++)
@@ -743,9 +663,6 @@ void Restore_Rotation_Matrix(pt3* VP1_data/*previous frame*/, pt3* VP2_data  /*c
     //double *R1 = new double [9];
     dgesvd_driver(4,4,A_temp_matrix,U_,S,VT);
     
-    //matrix_print(4,4,VT);
-    //matrix_transpose(4,4,VT,V);
-    //matrix_print(4,4,VT);
     
     V_vector[0]= VT[12];V_vector[1]= VT[13];V_vector[2]= VT[14];V_vector[3]= VT[15];
     //matrix_print(4,1,V_vector);

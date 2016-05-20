@@ -39,19 +39,6 @@ extern int Img_height;
 extern bool update_value;
 extern float _matrix[9];
 extern GLuint  myTexture;
-//# define Canny_thd 1400
-//# define Canny_mask 5
-//# define BLACK 0
-//# define WHITE 255
-//# define line_threshold 25
-//# define minLength      45
-//# define tolerance      2.0   //  line tolerance
-//# define segmentation   35 
-//# define maxima_trial   400
-//# define error_deviation  0.0005
-//# define error_deviation1 0.01  
-//# define Focallength 500
-
 
 void Plot_frame_lines(IplImage* Img_plot, vector< vector<CvPoint> >& Line_Segmentation);
 void display(); 
@@ -62,7 +49,8 @@ void idle();
 void idle1();
 void drawAxes(float length);
 void reshape( int w, int h );
-IplImage* skipNFrames(CvCapture* capture, int n);
+//IplImage* skipNFrames(CvCapture* capture, int n);
+IplImage* scaleFrame(CvCapture* capture, int n);
 void Jlinkage_app();
 void DrawCone ();
 

@@ -46,8 +46,8 @@ void fit(std::vector<std::vector<CvPoint> >&edgelist, int ImgWidth, int ImgHeigh
         
         for (int i=0;i<size_row;i++)
         {
-            V1[(i*3)+0]=(1.0/560)*(edgelist[j][i].x-ImgWidth/2);
-            V1[(i*3)+1]=(1.0/560)*(edgelist[j][i].y-ImgHeight/2);
+            V1[(i*3)+0]=(1.0/Focallength)*(edgelist[j][i].x-ImgWidth/2);
+            V1[(i*3)+1]=(1.0/Focallength)*(edgelist[j][i].y-ImgHeight/2);
             V1[(i*3)+2]=1.0;
         } 
         // matrix_print(size,3,V1);
@@ -76,10 +76,10 @@ void fit(std::vector<std::vector<CvPoint> >&edgelist, int ImgWidth, int ImgHeigh
         CvPoint2D32f back ;
         CvPoint2D32f front;
         
-        back.x =(1.0/560)*(edgelist[j].back().x-(ImgWidth/2));
-        back.y =(1.0/560)*(edgelist[j].back().y-(ImgHeight/2));
-        front.x =(1.0/560)*(edgelist[j].front().x-(ImgWidth/2));
-        front.y =(1.0/560)*(edgelist[j].front().y-(ImgHeight/2));
+        back.x =(1.0/Focallength)*(edgelist[j].back().x-(ImgWidth/2));
+        back.y =(1.0/Focallength)*(edgelist[j].back().y-(ImgHeight/2));
+        front.x =(1.0/Focallength)*(edgelist[j].front().x-(ImgWidth/2));
+        front.y =(1.0/Focallength)*(edgelist[j].front().y-(ImgHeight/2));
         ////   
         // substract from center ;
         Edg.pointUn_Rec(j, back , front);

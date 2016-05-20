@@ -36,7 +36,7 @@ int win_id[2];
 
 #define Ues_simulated_frame
 
-MyEnum typp_test::_enum = Add_opengl_1;
+MyEnum typp_test::_enum = frame_based_1;
 GLuint  myTexture;
 
 using namespace std;
@@ -45,7 +45,7 @@ void Draw_Result_Imagebased(IplImage *img, int &size_1, vector<vector<CvPoint> >
 int main (int argc, char * argv[])
 {
   
-      typp_test::set_Add_opengl();     // select the operation type here. 
+    typp_test::set_Add_opengl();     // select the operation type here. 
 
 #ifdef External_Camera_Capture
     
@@ -71,35 +71,15 @@ int main (int argc, char * argv[])
     
      int grabFrameRet;
     
-    // while (true) 
-    //do 
-    //{
+   
         if ((cameraFrame = cvQueryFrame(camCapture))) 
        {
             glutInit(&argc, argv);
             CvPoint start_pt, end_pt;
             
-            // capture first frame
-            /*
-             set up window enviorment
-             */ 
             glutInitDisplayMode( GLUT_RGBA | GLUT_DOUBLE );
             glutInitWindowPosition( 20, 20 );
 
-            //  IplImage* out = cvCreateImage( cvGetSize(cameraFrame), IPL_DEPTH_8U, 3 );
-            //  cvCvtColor(cameraFrame ,out, CV_RGB2GRAY);
-            //  cvSmooth(cameraFrame, out, CV_GAUSSIAN, 21, 21 );
- //           vector<vector<CvPoint> > Line_Segmentation;
- //CvPoint start_pt, end_pt;
- //           IplImage* IGray;
- //           IplImage* Edge_map;
- //           IGray  = cvCreateImage(cvGetSize(cameraFrame), IPL_DEPTH_8U, 1);
- //           Edge_map  = cvCreateImage(cvGetSize(cameraFrame), IPL_DEPTH_8U, 1);
- //           cvCvtColor(cameraFrame,  IGray, CV_RGB2GRAY); 
- //           Line_Segmentation= edge_detection_test(IGray,Edge_map);
-           
-            //frame = skipNFrames(camCapture, 10);
-            //frame=cameraFrame; 
            frame = cvQueryFrame(camCapture);
            Img_width= frame->width;
            Img_height= frame->height;
@@ -108,12 +88,7 @@ int main (int argc, char * argv[])
            win_id[OPENGL_WINDOW]=glutCreateWindow( "OpenGL / OpenCV Example" );
            //glEnable(GL_TEXTURE_2D);
            myTexture = SOIL_load_OGL_texture("/sam.jpg", 0, 1, SOIL_FLAG_POWER_OF_TWO | SOIL_FLAG_INVERT_Y);
-           //glBindTexture(GL_TEXTURE_2D, myTexture);
-           //glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-           //glDisable(GL_TEXTURE_2D); 
-           //glEnable(GL_DEPTH_TEST);
-
-           
+          
             glutDisplayFunc( display );
             glutReshapeFunc( reshape );
             glutMouseFunc( mouse );
@@ -124,41 +99,13 @@ int main (int argc, char * argv[])
             cvReleaseImage(&cameraFrame);
             cvReleaseImage(&frame);
             
-//            for (int i=0;i<(int)Line_Segmentation.size();i++)
-//            {
-//                
-//                start_pt.x =  Line_Segmentation[i][0].x;
-//                end_pt.x =    Line_Segmentation[i][int(Line_Segmentation[i].size())-1].x;
-//                
-//                start_pt.y =  Line_Segmentation[i][0].y;
-//                end_pt.y =    Line_Segmentation[i][int(Line_Segmentation[i].size())-1].y;
-//                
-//                cvLine(frame,start_pt,end_pt,CV_RGB(0,255,0),1,CV_AA);
-//            }
-              //cvResizeWindow( CAMERA_OUTPUT_WINDOW_NAME, 600, 600 ); 
-              //cvResizeWindow( "test", 600,600 ); 
-            //  cvShowImage(CAMERA_OUTPUT_WINDOW_NAME,frame);
-            //  cvShowImage("test",IGray);
-         }
-//         if (cvWaitKey(60) != -1)
-//         {
-//            cout << "Input" << endl;
-//            break;
-//        }
-//     }
 
-//    cout << "Done" << endl;
-  
-   
-//     }
-    
-    //cvDestroyWindow(CAMERA_OUTPUT_WINDOW_NAME);
-    //cvDestroyWindow("test");
-    //exitCameraOpenFailed:
-//    return 0;
+         }
 #endif  
-#ifdef Ues_simulated_frame   
-     capture = cvCaptureFromFile("/test_w_5.mov");
+
+#ifdef Ues_simulated_frame  
+    
+     capture = cvCaptureFromFile("/test_w_13.mov");
      frame = NULL;
 
     if (typp_test::read()==2)   // frame_based
@@ -175,7 +122,13 @@ int main (int argc, char * argv[])
         CvPoint start_pt, end_pt;
         do
         {
-            frame = skipNFrames(capture, 2);
+             IplImage *destination = scaleFrame(capture, 0);
+            //IplImage* temp;
+            //temp = cvResize(frame, temp);
+            
+            frame = cvCreateImage ( cvSize(800,600), destination->depth, 3);
+            cvResize(destination, frame);
+            
             cvNamedWindow("frame", CV_WINDOW_NORMAL);
             cvResizeWindow("frame", 400, 400 ); 
             Img_width  = frame->width;
@@ -220,39 +173,31 @@ int main (int argc, char * argv[])
     if (typp_test::read()==1)  // set to Add_opengl
     {
       # define vector_erase 
-      //IplImage* IGray;
-      //IplImage* Edge_map;
-      //vector<vector<CvPoint> > Line_Segmentation;
+     
        glutInit(&argc, argv);
-       CvPoint start_pt, end_pt;
+       //CvPoint start_pt, end_pt;
 
-      // capture first frame
-      /*
-        set up window enviorment
-      */ 
+       // capture first frame
        glutInitDisplayMode( GLUT_RGBA | GLUT_DOUBLE );
-       glutInitWindowPosition( 20, 20 );
-       
-       /*
-       overwrite the image size for display window 
-       */ 
-        frame = skipNFrames(capture, 0);
-        Img_width= frame->width;
-        Img_height= frame->height;
-        //cvShowImage("test",cameraFrame);
-        glutInitWindowSize( Img_width, Img_height );
-        win_id[OPENGL_WINDOW]=glutCreateWindow( "OpenGL / OpenCV Example" );
-         myTexture = SOIL_load_OGL_texture("/utd.jpg", 0, 1, SOIL_FLAG_POWER_OF_TWO | SOIL_FLAG_INVERT_Y);
-        // set up GUI callback functions
+       glutInitWindowPosition( 30, 30 );
+        
+       frame = scaleFrame(capture, 0);
+        
+       Img_width= frame->width;
+       Img_height= frame->height;
+      
+       glutInitWindowSize( Img_width, Img_height );
+       win_id[OPENGL_WINDOW]=glutCreateWindow( "OpenGL / OpenCV Example" );
+       myTexture = SOIL_load_OGL_texture("/utd.jpg", 0, 1, SOIL_FLAG_POWER_OF_TWO | SOIL_FLAG_INVERT_Y);
+        
         glutDisplayFunc( display );
         glutReshapeFunc( reshape );
-        glutMouseFunc( mouse );
-        glutKeyboardFunc( keyboard );
         glutIdleFunc( idle );        
         glutMainLoop();
         cvReleaseCapture(&capture);
         cvReleaseImage(&frame);
         }
+    
     if (typp_test::read()==3)  // set to image_base 
     {
         int ImgWidth=0;
@@ -261,12 +206,6 @@ int main (int argc, char * argv[])
         ImgWidth =(int) img->width;
         ImgHeight=(int) img->height;
         Image<uint8> imgT(img);
-        
-        //int DN1;
-        //DN1 = imgT(10,0);
-        //std::vector<CvPoint> vPt;
-        //std::cout<<(DN1)<<endl;
-        //std::cout<<ImgWidth<<" "<<ImgHeight<<endl;
         
         IplImage* Edge_map; 
         IplImage* IGray  = cvCreateImage(cvGetSize(img), IPL_DEPTH_8U, 1);

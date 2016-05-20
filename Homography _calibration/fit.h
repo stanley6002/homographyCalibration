@@ -24,7 +24,6 @@
 //#include <iostream>
 //#include <cv.h>
 #include <algorithm> 
-//#include <highgui.h>
 #include "matrix_OP.h"
 #include <stdio.h>
 #include <math.h>
@@ -33,27 +32,6 @@
 
 //using namespace std;
 //extern const int col = maxima_trial;
-
-
-//typedef struct  xypoint
-//{
-//    int x;
-//    int y;
-//
-//} point;
-//
-//typedef struct  Cpoint
-//{
-//    double x;
-//    double y;
-//} point_D;
-//
-//typedef struct  C1Lpt
-//{
-//    double p1;
-//    double p2;
-//    double p3;
-//} pt3;
 
 class Edge1
 {
@@ -74,14 +52,6 @@ public:
 class Edge2
 {
 public:
-    //    Edge2()
-    //    {
-    //        Edge_lst= new Edge1;
-    //    }
-    // Edge2 (int num) : size_(num)
-    //{
-    //    Edge_lst= new Edge1[num];  
-    //}
     ~Edge2()
     {
         delete [] Edge_lst;
@@ -101,14 +71,14 @@ public:
     void  GetPoint(int location, double *point);
     point_D GetCpoint(int location);
     pt3   GetC1Lpt(int location);
-    
-    
+        
     inline double operator()(const int location, const int rowIndx) 
     {
         return (Edge_lst[location].vL_[rowIndx]);
     }
     void pointUn(int location);
     int size() const ;
+
 private:
     int size_;
     // double vL_[3];
@@ -159,9 +129,7 @@ inline void  Edge2::skm_Cpoint(int &location, double* skmat)
     double y= (y1+y2)/2;
     Edge_lst[location].Cpoint.x=x;
     Edge_lst[location].Cpoint.y=y;
-    //std::cout<<Edge_lst[location].pointUn1_.x<<" "<<Edge_lst[location].pointUn1_.y<<endl;
-    //std::cout<<Edge_lst[location].pointUn2_.x<<" "<<Edge_lst[location].pointUn2_.y<<endl;
-    //std::cout<<x<<" "<<y;
+ 
     Gen_skm(x,y,skmat);   
 }
 inline void  Edge2::Gen_C1Lpoint_Distance(int location)
@@ -170,13 +138,7 @@ inline void  Edge2::Gen_C1Lpoint_Distance(int location)
     double x1= (Edge_lst[location].skMat[0]*Edge_lst[location].pointUn1_.x)+(Edge_lst[location].skMat[1]*Edge_lst[location].pointUn1_.y)+(Edge_lst[location].skMat[2]);
     double x2= (Edge_lst[location].skMat[3]*Edge_lst[location].pointUn1_.x)+(Edge_lst[location].skMat[4]*Edge_lst[location].pointUn1_.y)+(Edge_lst[location].skMat[5]);
     double x3= (Edge_lst[location].skMat[6]*Edge_lst[location].pointUn1_.x)+(Edge_lst[location].skMat[7]*Edge_lst[location].pointUn1_.y)+(Edge_lst[location].skMat[8]);
-    
-    //    std::cout<<Edge_lst[location].skMat[0]<<" "<<Edge_lst[location].skMat[1]<<" "<<Edge_lst[location].skMat[2]<<endl;
-    //    std::cout<<Edge_lst[location].skMat[3]<<" "<<Edge_lst[location].skMat[4]<<" "<<Edge_lst[location].skMat[5]<<endl;
-    //    std::cout<<Edge_lst[location].skMat[6]<<" "<<Edge_lst[location].skMat[7]<<" "<<Edge_lst[location].skMat[8]<<endl;
-    
-    //    std::cout<<"Normal_ ";
-    //    std::cout<< Edge_lst[location].pointUn1_.x<<" "<<Edge_lst[location].pointUn1_.y<<endl; 
+     
     
     Edge_lst[location].C1Lpt.p1=x1;
     Edge_lst[location].C1Lpt.p2=x2;
@@ -200,7 +162,6 @@ inline void  Edge2::Gen_skm(double &x, double &y , double* skemat)
 }
 inline void Edge2::pointUn(int location)
 {
-    //std::cout<<endl;
     std::cout<<Edge_lst[location].pointUn1_.x<<" "<<Edge_lst[location].pointUn1_.y<<endl;
     std::cout<<Edge_lst[location].pointUn2_.x<<" "<<Edge_lst[location].pointUn2_.y<<endl;
     
@@ -232,7 +193,6 @@ inline Edge2& Edge2:: pointUn_Rec(int location, CvPoint2D32f& point1, CvPoint2D3
     Edge_lst[location].pointUn1_.y= point1.y;
     Edge_lst[location].pointUn2_.x= point2.x;
     Edge_lst[location].pointUn2_.y= point2.y;
-    //std::cout<<Edge_lst[location].pointUn2_.x<<" "<<Edge_lst[location].pointUn2_.y<<endl;
     
     double* skm= new double [9];
     skm_Cpoint(location, skm);
@@ -242,8 +202,7 @@ inline Edge2& Edge2:: pointUn_Rec(int location, CvPoint2D32f& point1, CvPoint2D3
     Edge_lst[location].skMat[4]= skm[4];  Edge_lst[location].skMat[5]= skm[5];
     Edge_lst[location].skMat[6]= skm[6];  Edge_lst[location].skMat[7]= skm[7];
     Edge_lst[location].skMat[8]= skm[8];  
-    // pointUn(location);
-    //matrix_print(3,3,skm);
+    
     Gen_C1Lpoint_Distance(location); 
     delete [] skm;
     
