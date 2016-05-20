@@ -105,7 +105,7 @@ int main (int argc, char * argv[])
 
 #ifdef Ues_simulated_frame  
     
-     capture = cvCaptureFromFile("/test_w_13.mov");
+     capture = cvCaptureFromFile("/test_w_8.mov");
      frame = NULL;
 
     if (typp_test::read()==2)   // frame_based
@@ -188,7 +188,7 @@ int main (int argc, char * argv[])
       
        glutInitWindowSize( Img_width, Img_height );
        win_id[OPENGL_WINDOW]=glutCreateWindow( "OpenGL / OpenCV Example" );
-       myTexture = SOIL_load_OGL_texture("/utd.jpg", 0, 1, SOIL_FLAG_POWER_OF_TWO | SOIL_FLAG_INVERT_Y);
+       myTexture = SOIL_load_OGL_texture("/utd.jpg", 0, 0.5 , SOIL_FLAG_POWER_OF_TWO | SOIL_FLAG_INVERT_Y);
         
         glutDisplayFunc( display );
         glutReshapeFunc( reshape );

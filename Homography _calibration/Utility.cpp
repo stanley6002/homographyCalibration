@@ -16,7 +16,8 @@
 #include <mach/clock.h>
 #include <mach/mach.h>
 #endif
-
+#include <string>
+double elapsed =0.0;
 
 void current_utc_time(struct timespec *ts) {
     
@@ -68,8 +69,18 @@ void display()
          
     cv::Mat out;
     cv::Mat tempimage(frame);
+    
+    std::ostringstream os;
+    os << (1/elapsed);
+    string temp = "Frame rate: ";
+    string txt= temp + os.str();
+    cv::Point Pt(10,50);
+    int linetype=2;
+    cv::putText(tempimage,txt,Pt,CV_FONT_HERSHEY_COMPLEX,0.8,cv::Scalar(0,0,0),2,linetype);
+    
     cv::flip (tempimage,out,0);
     
+
     //cvShowImage("rt", frame);
     glDrawPixels( out.size().width, out.size().height,GL_BGR, GL_UNSIGNED_BYTE,out.ptr());    
     
@@ -324,7 +335,7 @@ void Jlinkage_app()
     CvPoint start_pt, end_pt;
     
     clock_t start, end;
-    double elapsed;
+    //double elapsed;
     start = clock();
 
     vector<vector<CvPoint> > Line_Segmentation;          
@@ -333,8 +344,8 @@ void Jlinkage_app()
     cvCvtColor(frame,  IGray, CV_RGB2GRAY); 
     Line_Segmentation= edge_detection_test(IGray,Edge_map);
 
-    end = clock();
-    elapsed = ((double) (end - start)) / CLOCKS_PER_SEC;
+    //end = clock();
+    //elapsed = ((double) (end - start)) / CLOCKS_PER_SEC;
     
     std::cout<<"time edge  and line segmentation: "<<elapsed <<endl;
     
